@@ -41,17 +41,16 @@ export default function Home() {
             className="text-3xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] mb-4 sm:mb-5 leading-tight"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            با دوستان{' '}
-            <span className="gradient-text">همزمان</span>
+            با دوستات همزمان{' '}
+            <span className="gradient-text">فیلم ببین</span>
             <br />
-            فیلم تماشا کنید
+            <span className="text-[var(--accent)]">اونم رایگان</span>
           </h2>
           <p
             className="text-[var(--text-secondary)] text-base sm:text-lg max-w-xl mx-auto leading-relaxed px-2"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            یک اتاق بسازید، لینک ویدیو را اضافه کنید و دوستان خود را دعوت کنید.
-            همه با هم و هماهنگ فیلم تماشا می‌کنند!
+            اتاق بساز، لینک ویدیو بذار، دوستان رو دعوت کن. همه با هم و هماهنگ تماشا می‌کنن، بدون هیچ هزینه‌ای.
           </p>
         </div>
 
