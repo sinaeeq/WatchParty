@@ -58,7 +58,7 @@ export default function Chat({ messages, onSendMessage, username }: ChatProps) {
   }, [messages])
 
   return (
-    <div className="flex flex-col h-full bg-[#12141a] rounded-2xl border border-white/5 overflow-hidden">
+    <div className="flex flex-col h-full bg-[#12141a] rounded-2xl border border-white/5 overflow-hidden min-h-0">
       {/* Header */}
       <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/5 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-2 sm:gap-2.5">
@@ -78,8 +78,8 @@ export default function Chat({ messages, onSendMessage, username }: ChatProps) {
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-2.5 sm:px-3 py-2 sm:py-3 space-y-0.5 min-h-0">
+      {/* Messages — independent scroll container with containment */}
+      <div className="chat-scroll-container flex-1 px-2.5 sm:px-3 py-2 sm:py-3 space-y-0.5 min-h-0">
         {!messages.length ? (
           <div className="flex flex-col items-center justify-center h-full text-white/20">
             <svg className="w-10 h-10 mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>

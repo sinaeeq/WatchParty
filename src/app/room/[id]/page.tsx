@@ -94,7 +94,7 @@ export default function RoomPage() {
   if (!username) return <UserSetup onJoin={handleJoin} />
 
   return (
-    <div className="h-dvh sm:h-screen bg-[#0B0D11] flex flex-col overflow-hidden relative grid-pattern">
+    <div className="room-viewport h-dvh sm:h-screen bg-[#0B0D11] flex flex-col overflow-hidden relative grid-pattern">
       {/* Subtle ambient glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[var(--accent)]/[0.03] rounded-full blur-[120px]" />
@@ -126,7 +126,7 @@ export default function RoomPage() {
       {/* Main content — vertical on mobile, horizontal on desktop */}
       <div className="flex-1 flex flex-col lg:flex-row min-h-0 relative">
         {/* Video — full width on mobile, flex-1 on desktop */}
-        <div className="mobile-video-wrap w-full lg:flex-1 min-w-0 flex-shrink-0 lg:shrink-0">
+        <div className="mobile-video-wrap w-full lg:flex-1 min-w-0 flex-shrink-0 lg:shrink-0 min-h-0">
           <div className="w-full h-full flex items-center justify-center p-2 sm:p-3 lg:p-3 lg:pr-0">
             <div className="w-full h-full flex items-center">
               <VideoPlayer videoUrl={room.videoUrl} videoType={room.videoType as 'youtube' | 'direct'} onSync={handleSync} externalState={syncState} />

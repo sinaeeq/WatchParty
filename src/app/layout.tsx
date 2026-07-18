@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" className="h-full antialiased" data-scroll-behavior="smooth">
-      <body className="min-h-full flex flex-col bg-[var(--bg-deep)] overscroll-none">{children}</body>
+      <body className="min-h-full flex flex-col bg-[var(--bg-deep)] overflow-x-hidden">{children}</body>
     </html>
   );
 }
