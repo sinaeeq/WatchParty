@@ -88,8 +88,9 @@ The project includes `railway.json`:
     "startCommand": "npm run db:migrate && npm run start",
     "buildCommand": "npm run build",
     "healthcheckPath": "/",
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 3
+    "restartPolicyMaxRetries": 5
   }
 }
 ```
