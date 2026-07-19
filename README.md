@@ -3,9 +3,7 @@
 **Watch Party** is a free, real-time synchronized video-watching platform. Create a room, add a video link, share the link with friends, and watch together — everyone's playback stays perfectly in sync.
 
 <p align="center">
-  <a href="./SETUP.md">📦 Setup Guide</a>
-  &nbsp;|&nbsp;
-  <a href="./SETUP-FA.md">🇮🇷 راهنمای فارسی</a>
+  <a href="./SETUP.md">📦 Self-Hosting Guide</a>
   &nbsp;|&nbsp;
   <a href="./README-FA.md">🇮🇷 فارسی</a>
 </p>
@@ -52,13 +50,6 @@ Works on desktop and mobile. Fullscreen mode with orientation lock on mobile dev
 > ⚠️ **Note for YouTube:** Due to regional restrictions, you may need a VPN to use the YouTube feature.
 
 ---
-
-## 🛠️ Self-Hosting
-
-If you'd like to run your own instance, see:
-
-- [English Setup Guide](./SETUP.md) — local dev + Railway deploy
-- [راهنمای فارسی راه‌اندازی](./SETUP-FA.md) — آموزش نصب و دیپلوی
 
 ---
 
