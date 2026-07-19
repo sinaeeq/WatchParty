@@ -409,6 +409,7 @@ html, body {
   .mobile-video-wrap {
     max-height: 45vh;
     min-height: 200px;
+    padding: 0 5%; /* ≈90% width, centered — creates side gap so video isn't edge-to-edge */
   }
 }
 
@@ -428,6 +429,13 @@ html, body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+
+  /* Landscape mobile: thin frame, full width */
+  .video-player-container {
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-elevated);
   }
 }
 
@@ -503,6 +511,11 @@ html, body {
     align-self: center;
     width: auto;
     max-width: 100%;
+    /* Add a clean frame: border, border-radius, box-shadow */
+    border: 2px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-elevated), 0 0 0 1px var(--border-subtle) inset;
+    background: #000;
   }
 
   /* Volume slider always visible on mobile (hover doesn't work on touch) */
