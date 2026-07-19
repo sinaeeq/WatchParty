@@ -51,8 +51,6 @@ Works on desktop and mobile. Fullscreen mode with orientation lock on mobile dev
 
 ---
 
----
-
 ## 📖 Read in Persian
 
 [🇮🇷 نسخه فارسی این صفحه](./README-FA.md)

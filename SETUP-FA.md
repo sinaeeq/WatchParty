@@ -2,6 +2,10 @@
 
 این راهنما مراحل نصب و اجرای پروژه Watch Party را به صورت لوکال و همچنین دیپلوی روی Railway توضیح می‌دهد.
 
+<p align="center">
+  <a href="./SETUP.md">📦 English Guide</a>
+</p>
+
 ---
 
 ## راه‌اندازی لوکال

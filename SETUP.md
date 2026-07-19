@@ -2,6 +2,10 @@
 
 This guide covers local development setup and deploying on Railway.
 
+<p align="center">
+  <a href="./SETUP-FA.md">🇮🇷 راهنمای فارسی</a>
+</p>
+
 ---
 
 ## Local Development
