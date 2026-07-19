@@ -2,6 +2,14 @@
 
 **Watch Party** is a free, real-time synchronized video-watching platform. Create a room, add a video link, share the link with friends, and watch together — everyone's playback stays perfectly in sync.
 
+<p align="center">
+  <a href="./SETUP.md">📦 Setup Guide</a>
+  &nbsp;|&nbsp;
+  <a href="./SETUP-FA.md">🇮🇷 راهنمای فارسی</a>
+  &nbsp;|&nbsp;
+  <a href="./README-FA.md">🇮🇷 فارسی</a>
+</p>
+
 ---
 
 ## ✨ Features
