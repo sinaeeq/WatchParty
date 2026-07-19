@@ -44,7 +44,7 @@ export default function Home() {
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 mb-12 sm:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 mb-12 sm:mb-16">
           {[
             {
               icon: (
@@ -79,22 +79,22 @@ export default function Home() {
           ].map((feature, i) => (
             <div
               key={i}
-              className="group relative bg-[var(--bg-card)] rounded-xl p-5 sm:p-6 border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-all duration-300 hover:shadow-[var(--shadow-card)]"
+              className="group relative bg-[var(--bg-card)] rounded-xl p-4 sm:p-6 border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-all duration-300 hover:shadow-[var(--shadow-card)]"
               style={{ animationDelay: `${i * 100}ms` }}
             >
               <div
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110"
+                className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center mb-2 sm:mb-4 transition-transform duration-300 group-hover:scale-110"
                 style={{ background: `${feature.color}15`, color: feature.color }}
               >
                 {feature.icon}
               </div>
               <h3
-                className="text-[var(--text-primary)] font-bold mb-1.5 sm:mb-2 text-[14px] sm:text-[15px]"
+                className="text-[var(--text-primary)] font-bold mb-1 text-[13px] sm:text-[15px]"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
                 {feature.title}
               </h3>
-              <p className="text-[var(--text-secondary)] text-xs sm:text-sm leading-relaxed" style={{ fontFamily: 'var(--font-body)' }}>
+              <p className="text-[var(--text-secondary)] text-[11px] sm:text-sm leading-relaxed" style={{ fontFamily: 'var(--font-body)' }}>
                 {feature.desc}
               </p>
             </div>
