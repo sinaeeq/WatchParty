@@ -488,6 +488,19 @@ html, body {
 
 /* ── Mobile portrait: compact volume controls ── */
 @media (max-width: 639px) and (orientation: portrait) {
+  /* YouTube iframe — maintain 16:9 aspect ratio */
+  .video-player-container iframe {
+    aspect-ratio: 16 / 9;
+    position: relative !important;
+    max-height: 40vh;
+  }
+
+  /* Video element — maintain natural aspect ratio */
+  .video-player-container video {
+    object-fit: contain;
+    max-height: 40vh;
+  }
+
   /* Volume slider always visible on mobile (hover doesn't work on touch) */
   .video-player-container .group\/vol input[type="range"] {
     width: 56px !important;
