@@ -52,22 +52,17 @@ http://localhost:3000
 
 ## دیپلوی روی Railway
 
-### 1. آپلود پروژه روی GitHub
+### 1. Fork کردن ریپازیتوری
 
-```bash
-git add .
-git commit -m "Update app"
-git push
-```
-
-> توجه: فایل `.env` را commit نکن. این فایل داخل `.gitignore` قرار دارد.
+۱. برو به [github.com/sinapkn/WatchParty](https://github.com/sinapkn/WatchParty)
+۲. روی دکمه **Fork** (بالا-راست) کلیک کن تا یک کپی از پروژه توی حساب گیت‌هاب خودت ساخته بشه
 
 ### 2. ساخت پروژه در Railway
 
 1. وارد [Railway](https://railway.app) شو.
 2. یک پروژه جدید بساز.
 3. یک سرویس جدید از **GitHub Repository** اضافه کن.
-4. ریپوی همین پروژه را انتخاب کن.
+4. ریپوی فورک شده خودت را انتخاب کن.
 
 ### 3. اضافه کردن PostgreSQL
 

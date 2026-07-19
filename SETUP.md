@@ -52,22 +52,17 @@ http://localhost:3000
 
 ## Deploy on Railway
 
-### 1. Push the project to GitHub
+### 1. Fork the repository
 
-```bash
-git add .
-git commit -m "Update app"
-git push
-```
-
-> Do not commit `.env` — it is in `.gitignore`.
+1. Go to [github.com/sinapkn/WatchParty](https://github.com/sinapkn/WatchParty)
+2. Click the **Fork** button (top-right) to create a copy under your own GitHub account
 
 ### 2. Create a Railway project
 
 1. Open [Railway](https://railway.app).
 2. Create a new project.
 3. Add a new service from your **GitHub Repository**.
-4. Select this repository.
+4. Select your fork of this repository.
 
 ### 3. Add PostgreSQL
 
