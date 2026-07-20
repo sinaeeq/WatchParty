@@ -123,16 +123,6 @@ export default function Home() {
           </div>
         </footer>
       </div>
-
-      {/* Branding watermark — fixed, always visible */}
-      <div className="fixed bottom-2 left-2 sm:bottom-3 sm:left-3 z-50 pointer-events-none select-none">
-        <span
-          className="text-[10px] sm:text-[11px] tracking-wider text-white/[0.08] font-medium"
-          style={{ fontFamily: 'var(--font-heading)', letterSpacing: '0.1em' }}
-        >
-          sinapk
-        </span>
-      </div>
     </main>
   )
 }
