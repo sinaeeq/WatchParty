@@ -407,16 +407,18 @@ html, body {
 /* ── Mobile portrait: keep video natural, give chat room ── */
 @media (max-width: 639px) and (orientation: portrait) {
   .mobile-video-wrap {
-    max-height: 38vh;
-    padding: 6px 5% 2px; /* top gap from header, 90% width centered */
+    max-height: 32vh;
+    padding: 12px 8% 4px; /* more top gap, 84% width centered */
+    display: flex;
+    justify-content: center;
   }
 
   /* Explicit 16:9 using calc — no aspect-ratio, no height:auto.
      The container gets a DEFINITE pixel height so position:absolute
      children (controls, fullscreen btn, etc.) always render correctly. */
   .video-player-container {
-    width: 90vw !important;
-    height: calc(90vw * 9 / 16) !important;
+    width: 84vw !important;
+    height: calc(84vw * 9 / 16) !important;
     /* Frame */
     border: 2px solid var(--border-default) !important;
     border-radius: var(--radius-lg) !important;
