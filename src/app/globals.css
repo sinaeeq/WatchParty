@@ -385,8 +385,8 @@ html, body {
   }
 }
 
-/* ── Mobile video: natural aspect ratio, not stretched ── */
-@media (max-width: 639px) {
+/* ── Mobile video: fill tab, no border radius ── */
+@media (max-width: 1023px) {
   .video-player-container {
     width: 100%;
     height: 100%;
@@ -404,24 +404,11 @@ html, body {
   }
 }
 
-/* ── Mobile portrait: keep video natural, give chat room ── */
-@media (max-width: 639px) and (orientation: portrait) {
+/* ── Mobile video: fill the tab container ── */
+@media (max-width: 1023px) {
   .mobile-video-wrap {
-    max-height: 45vh;
-    min-height: 200px;
-  }
-}
-
-/* ── Mobile video: landscape — fill full viewport (no 60vh cap) ── */
-@media (max-width: 1023px) and (orientation: landscape) {
-  .mobile-video-wrap {
-    flex: 1 1 100%;
-    min-height: 0;
-  }
-  .mobile-video-wrap > div:first-child {
     width: 100%;
     height: 100%;
-    overflow: hidden;
   }
   .mobile-video-wrap video,
   .mobile-video-wrap iframe {
@@ -494,36 +481,19 @@ html, body {
   }
 }
 
-/* ── Mobile portrait: compact volume controls ── */
-@media (max-width: 639px) and (orientation: portrait) {
-  /* Video container — natural aspect ratio, not stretched */
-  .video-player-container {
-    aspect-ratio: 16 / 9;
-    max-height: 45vh;
-    align-self: center;
-    width: auto;
-    max-width: 100%;
-  }
-
-  /* Volume slider always visible on mobile (hover doesn't work on touch) */
+/* ── Mobile: volume slider always visible (hover doesn't work on touch) ── */
+@media (max-width: 1023px) {
   .video-player-container .group\/vol input[type="range"] {
     width: 56px !important;
     display: block !important;
   }
 
-  /* Override the group-hover w-0 behavior via parent — force visible on mobile */
   .video-player-container .group\/vol {
     display: flex !important;
     align-items: center !important;
   }
 
-  /* Tighter control bar on portrait mobile */
-  .video-player-container .video-controls-overlay .pointer-events-auto .flex.items-center.justify-between {
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-
-  /* Smaller buttons on portrait mobile */
+  /* Smaller buttons on mobile */
   .video-player-container .video-controls-overlay button {
     width: 36px !important;
     height: 36px !important;
@@ -545,6 +515,28 @@ html, body {
     padding-right: 6px !important;
     padding-top: 4px !important;
     padding-bottom: 4px !important;
+  }
+}
+
+/* ══════════════════════════════════════
+   MOBILE TAB BAR
+   ══════════════════════════════════════ */
+
+/* ── Tab bar active indicator ── */
+@media (max-width: 1023px) {
+  .room-viewport .flex-shrink-0.border-t button {
+    position: relative;
+  }
+  .room-viewport .flex-shrink-0.border-t button.text-\[var\(--accent\)\]::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
   }
 }
 

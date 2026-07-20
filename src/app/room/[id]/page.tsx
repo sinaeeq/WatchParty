@@ -22,6 +22,7 @@ export default function RoomPage() {
   const [userCount, setUserCount] = useState(1)
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
   const [syncState, setSyncState] = useState<VideoSyncState | null>(null)
+  const [mobileTab, setMobileTab] = useState<'video' | 'chat'>('video')
   const socketRef = useRef<Socket | null>(null)
 
   useEffect(() => {
@@ -126,23 +127,69 @@ export default function RoomPage() {
         </div>
       </header>
 
-      {/* Main content — vertical on mobile, horizontal on desktop */}
+      {/* Main content */}
       <div className="flex-1 flex flex-col lg:flex-row min-h-0 relative">
-        {/* Video — full width on mobile, flex-1 on desktop */}
-        <div className="mobile-video-wrap w-full flex-1 min-w-0 min-h-0 lg:shrink-0 lg:p-3 lg:pr-0">
-          <div className="w-full h-full">
-            <VideoPlayer videoUrl={room.videoUrl} videoType={room.videoType as 'youtube' | 'direct'} onSync={handleSync} externalState={syncState} />
+        {/* ── Desktop: side by side (unchanged) ── */}
+        <div className="hidden lg:flex flex-1 min-h-0">
+          <div className="flex-1 min-w-0 p-3 pr-0">
+            <div className="w-full h-full">
+              <VideoPlayer videoUrl={room.videoUrl} videoType={room.videoType as 'youtube' | 'direct'} onSync={handleSync} externalState={syncState} />
+            </div>
+          </div>
+          <div className="w-[360px] flex-shrink-0 p-3 pl-0 flex flex-col min-h-0">
+            <Chat messages={messages} onSendMessage={handleSend} username={username} />
           </div>
         </div>
 
-        {/* Chat sidebar — desktop */}
-        <div className="hidden lg:flex w-[360px] flex-shrink-0 p-3 pl-0 flex-col min-h-0">
-          <Chat messages={messages} onSendMessage={handleSend} username={username} />
-        </div>
+        {/* ── Mobile: tab-based layout ── */}
+        <div className="lg:hidden flex-1 min-h-0 relative">
+          {/* Video tab */}
+          <div className={`absolute inset-0 ${mobileTab === 'video' ? 'block' : 'hidden'}`}>
+            <div className="w-full h-full p-1">
+              <VideoPlayer videoUrl={room.videoUrl} videoType={room.videoType as 'youtube' | 'direct'} onSync={handleSync} externalState={syncState} />
+            </div>
+          </div>
 
-        {/* Chat — mobile: fills remaining space */}
-        <div className="lg:hidden flex-1 min-h-0 flex flex-col px-2 pb-2 safe-bottom">
-          <Chat messages={messages} onSendMessage={handleSend} username={username} />
+          {/* Chat tab */}
+          <div className={`absolute inset-0 ${mobileTab === 'chat' ? 'flex' : 'hidden'} flex-col`}>
+            <Chat messages={messages} onSendMessage={handleSend} username={username} />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Mobile bottom tab bar ── */}
+      <div className="lg:hidden flex-shrink-0 border-t border-white/5 bg-[#0B0D11]/95 backdrop-blur-xl safe-bottom relative z-50">
+        <div className="flex">
+          <button
+            onClick={() => setMobileTab('video')}
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-all min-h-[52px] ${
+              mobileTab === 'video'
+                ? 'text-[var(--accent)]'
+                : 'text-white/40 active:text-white/60'
+            }`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+            </svg>
+            <span className="text-[11px] font-medium" style={{ fontFamily: 'var(--font-body)' }}>ویدیو</span>
+          </button>
+          <button
+            onClick={() => setMobileTab('chat')}
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-all min-h-[52px] relative ${
+              mobileTab === 'chat'
+                ? 'text-[var(--accent)]'
+                : 'text-white/40 active:text-white/60'
+            }`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+            </svg>
+            <span className="text-[11px] font-medium" style={{ fontFamily: 'var(--font-body)' }}>چت</span>
+            {/* Unread indicator — show when on video tab and new messages arrive */}
+            {mobileTab === 'video' && messages.length > 0 && (
+              <span className="absolute top-2 right-1/2 translate-x-3 w-2 h-2 bg-[var(--accent-warm)] rounded-full animate-pulse-dot" />
+            )}
+          </button>
         </div>
       </div>
     </div>
