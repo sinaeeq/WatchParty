@@ -66,4 +66,4 @@ Works on desktop and mobile. Fullscreen mode with orientation lock on mobile dev
 ## 📄 License
 
 Built with ❤️ by **SPK** & **MMDJ**.  
-All Rights Reserved. See [LICENSE](./LICENSE).
+Licensed under the [MIT License](./LICENSE).
