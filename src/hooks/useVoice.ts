@@ -4,8 +4,6 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import {
   Room,
   RoomEvent,
-  Track,
-  ConnectionState,
   type RemoteTrack,
   type LocalTrack,
 } from 'livekit-client'
@@ -15,6 +13,8 @@ export function useVoice(roomId: string, username: string) {
   const [muted, setMuted] = useState(true)
   const [participants, setParticipants] = useState<string[]>([])
   const [speaking, setSpeaking] = useState<string[]>([])
+  const [error, setError] = useState<string>('')
+  const [connecting, setConnecting] = useState(false)
   const roomRef = useRef<Room | null>(null)
 
   // Cleanup on unmount
@@ -28,66 +28,83 @@ export function useVoice(roomId: string, username: string) {
   }, [])
 
   const join = useCallback(async () => {
+    if (connecting) return
+    setConnecting(true)
+    setError('')
+
     try {
-      // Get token from server
+      console.log('[Voice] Fetching token for', roomId, username)
+
       const res = await fetch('/api/voice-token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ room: roomId, username }),
       })
 
-      if (!res.ok) throw new Error('Failed to get voice token')
+      if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text || `Server error: ${res.status}`)
+      }
 
       const { token, url } = await res.json()
+      console.log('[Voice] Token received, connecting to', url)
 
-      if (!url) throw new Error('LiveKit URL not configured')
+      if (!url) throw new Error('LiveKit URL not configured (missing LIVEKIT_URL in env)')
 
-      // Create and connect room
       const room = new Room({
         adaptiveStream: true,
         dynacast: true,
       })
 
-      // Listen for events
       room.on(RoomEvent.Connected, () => {
+        console.log('[Voice] Connected!')
         setConnected(true)
         setMuted(false)
         updateParticipants(room)
       })
 
       room.on(RoomEvent.Disconnected, () => {
+        console.log('[Voice] Disconnected')
         setConnected(false)
         setParticipants([])
       })
 
-      room.on(RoomEvent.ParticipantConnected, () => {
-        updateParticipants(room)
-      })
-
-      room.on(RoomEvent.ParticipantDisconnected, () => {
-        updateParticipants(room)
-      })
+      room.on(RoomEvent.ParticipantConnected, () => updateParticipants(room))
+      room.on(RoomEvent.ParticipantDisconnected, () => updateParticipants(room))
 
       room.on(RoomEvent.ActiveSpeakersChanged, (speakers) => {
         const speakerNames = speakers
-          .map(s => s.identity)
+          .map((s: { identity?: string }) => s.identity ?? '')
           .filter(Boolean)
         setSpeaking(speakerNames)
       })
 
-      // Connect to room
+      room.on(RoomEvent.MediaDevicesError, (err: Error) => {
+        console.error('[Voice] Media device error:', err)
+        setError('دسترسی به میکروفون مجاز نیست. لطفاً از مرورگر اجازه بدید.')
+      })
+
       await room.connect(url, token)
-
-      // Enable microphone
-      await room.localParticipant.setMicrophoneEnabled(true)
-
       roomRef.current = room
+
+      // Request microphone permission
+      try {
+        await room.localParticipant.setMicrophoneEnabled(true)
+        console.log('[Voice] Microphone enabled')
+      } catch (micErr) {
+        console.error('[Voice] Microphone error:', micErr)
+        setError('خطا در دسترسی به میکروفون. لطفاً مجوز میکروفون رو در مرورگر بررسی کنید.')
+      }
+
       updateParticipants(room)
-    } catch (err) {
-      console.error('Voice join error:', err)
+    } catch (err: any) {
+      console.error('[Voice] Join error:', err)
+      setError(err.message || 'خطا در اتصال ویس')
       setConnected(false)
+    } finally {
+      setConnecting(false)
     }
-  }, [roomId, username])
+  }, [roomId, username, connecting])
 
   const leave = useCallback(() => {
     if (roomRef.current) {
@@ -98,6 +115,7 @@ export function useVoice(roomId: string, username: string) {
     setMuted(true)
     setParticipants([])
     setSpeaking([])
+    setError('')
   }, [])
 
   const toggleMute = useCallback(() => {
@@ -110,16 +128,10 @@ export function useVoice(roomId: string, username: string) {
 
   const updateParticipants = (room: Room) => {
     const names: string[] = []
-    // Local participant
-    if (room.localParticipant) {
-      names.push(room.localParticipant.identity)
-    }
-    // Remote participants
+    if (room.localParticipant) names.push(room.localParticipant.identity)
     const remoteParticipants = room.remoteParticipants
     if (remoteParticipants) {
-      remoteParticipants.forEach((p: { identity: string }) => {
-        names.push(p.identity)
-      })
+      remoteParticipants.forEach((p: { identity: string }) => names.push(p.identity))
     }
     setParticipants(names)
   }
@@ -132,5 +144,7 @@ export function useVoice(roomId: string, username: string) {
     muted,
     participants,
     speaking,
+    error,
+    connecting,
   }
 }

@@ -165,6 +165,15 @@ export default function RoomPage() {
 
             <div className="w-px h-4 bg-white/10" />
 
+            {/* Voice error message */}
+            {voice.error && (
+              <div className="absolute left-0 right-0 top-full mt-2 px-3 z-50">
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg px-3 py-2 text-center" style={{ fontFamily: 'var(--font-body)' }}>
+                  {voice.error}
+                </div>
+              </div>
+            )}
+
             <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse-dot flex-shrink-0" />
             <span className="truncate max-w-[70px] sm:max-w-none" style={{ fontFamily: 'var(--font-body)' }}>{username}</span>
           </div>
