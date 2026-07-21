@@ -8,7 +8,6 @@
   <a href="https://watchparty.dpdns.org"><strong>🚀 watchparty.dpdns.org</strong></a>
 </p>
 <p align="center">
-  &nbsp;|&nbsp;
   <a href="./README-FA.md">🇮🇷 فارسی</a>
 </p>
 ---
