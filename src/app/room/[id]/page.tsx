@@ -26,7 +26,8 @@ export default function RoomPage() {
   const [mobileTab, setMobileTab] = useState<'video' | 'chat'>('video')
   const [chatReadCount, setChatReadCount] = useState(0)
   const socketRef = useRef<Socket | null>(null)
-  const { join: joinVoice, leave: leaveVoice, toggleMute, connected: voiceConnected, muted: voiceMuted, participants: voiceParticipants, speaking } = useVoice(roomId, username || '')
+  // Only create voice when username is available (after UserSetup)
+  const voice = useVoice(roomId, username ?? '')
 
   // Reset unread counter when switching to chat tab
   useEffect(() => {
@@ -73,6 +74,17 @@ export default function RoomPage() {
 
     return () => { socket.emit('leave-room', { roomId }); socket.disconnect() }
   }, [username, room, roomId])
+
+  // Auto-join voice when user enters the room
+  useEffect(() => {
+    if (username && !voice.connected && !voice.connecting) {
+      voice.join()
+    }
+    return () => {
+      if (voice.connected) voice.leave()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username])
 
   const handleSend = useCallback((content: string) => {
     if (!socketRef.current || !username) return
@@ -127,42 +139,66 @@ export default function RoomPage() {
 
           {/* Room info */}
           <div className="relative min-w-0 flex-1 flex justify-center">
-            <RoomHeader roomName={room.name} roomId={room.id} userCount={userCount} users={onlineUsers} />
+            <RoomHeader roomName={room.name} roomId={room.id} userCount={userCount} users={onlineUsers} speakingUsers={voice.speaking} />
           </div>
 
           {/* User + Voice */}
-          <div className="flex items-center gap-1.5 sm:gap-2 text-white/40 text-xs sm:text-sm flex-shrink-0 min-w-0">
-            {/* Voice button */}
+          <div className="flex items-center gap-1.5 sm:gap-2 text-white/40 text-xs sm:text-sm flex-shrink-0 min-w-0 relative">
+            {/* Voice toggle — single button, like Zoom/Meet */}
             <button
-              onClick={voiceConnected ? leaveVoice : joinVoice}
-              className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all flex-shrink-0 active:scale-90 ${
-                voiceConnected
-                  ? voiceMuted
-                    ? 'bg-red-500/15 text-red-400 border border-red-500/20'
-                    : 'bg-[var(--accent)]/15 text-[var(--accent)] border border-[var(--accent)]/20'
-                  : 'bg-white/5 text-white/30 hover:text-white/60 border border-white/10'
+              onClick={voice.toggleMute}
+              disabled={!voice.connected}
+              className={`relative flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 flex-shrink-0 active:scale-95 ${
+                !voice.connected
+                  ? 'bg-white/5 text-white/20 cursor-wait'
+                  : voice.muted
+                    ? 'bg-red-500/15 text-red-400 border border-red-500/20 hover:bg-red-500/25'
+                    : voice.speaking.includes(username || '')
+                      ? 'bg-[var(--accent)]/20 text-[var(--accent)] border border-[var(--accent)]/30 shadow-[0_0_12px_var(--accent-glow)]'
+                      : 'bg-[var(--accent)]/15 text-[var(--accent)] border border-[var(--accent)]/20 hover:bg-[var(--accent)]/25'
               }`}
-              title={voiceConnected ? (voiceMuted ? 'فعال کردن میکروفون' : 'قطع میکروفون') : 'ویس‌چت'}
+              style={{ fontFamily: 'var(--font-body)' }}
             >
-              {voiceConnected ? (
-                voiceMuted ? (
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                  </svg>
-                )
-              ) : (
+              {/* Icon */}
+              {!voice.connected ? (
+                <svg className="w-4 h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              ) : voice.muted ? (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                 </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                </svg>
+              )}
+
+              {/* Label */}
+              <span className="text-[10px] sm:text-xs">
+                {!voice.connected ? 'ویس...' : voice.muted ? 'خاموش' : 'وصل'}
+              </span>
+
+              {/* Speaking indicator (green dot) */}
+              {voice.connected && !voice.muted && voice.speaking.includes(username || '') && (
+                <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--accent)]" />
+                </span>
               )}
             </button>
 
             <div className="w-px h-4 bg-white/10" />
+
+            {/* Voice error message */}
+            {voice.error && (
+              <div className="absolute left-0 right-0 top-full mt-2 px-3 z-50">
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg px-3 py-2 text-center" style={{ fontFamily: 'var(--font-body)' }}>
+                  {voice.error}
+                </div>
+              </div>
+            )}
 
             <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse-dot flex-shrink-0" />
             <span className="truncate max-w-[70px] sm:max-w-none" style={{ fontFamily: 'var(--font-body)' }}>{username}</span>

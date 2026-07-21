@@ -1,4 +1,4 @@
-# راه‌اندازی Watch Party
+# راهنمای دیپلوی Watch Party
 
 این راهنما مراحل نصب و اجرای پروژه Watch Party را به صورت لوکال و همچنین دیپلوی روی Railway توضیح می‌دهد.
 
@@ -71,7 +71,7 @@ http://localhost:3000
 3. گزینه **PostgreSQL** را انتخاب کن.
 4. صبر کن تا سرویس PostgreSQL اجرا شود.
 
-### 4. تنظیم متغیرهای محیطی
+### 4. تنظیم متغیرهای محیطی (بخش اول — متغیر دیتابیس)
 
 وارد سرویس اصلی اپ در Railway شو و بخش **Variables** را باز کن. این متغیر را اضافه کن:
 
@@ -81,7 +81,45 @@ DATABASE_URL=${{Postgres.DATABASE_URL}}
 
 Railway این مقدار را از سرویس PostgreSQL همان پروژه می‌خواند.
 
-### 5. فایل Railway کانفیگ
+### 5. راه‌اندازی ویس چت (LiveKit Cloud)
+
+برای فعال کردن **ویس چت** در پروژه، از **LiveKit Cloud** استفاده کنید. این سرویس رایگان است و نیازی به کردیت کارت ندارد.
+
+#### قدم اول: ثبت‌نام در LiveKit Cloud
+
+```bash
+۱. برو به https://cloud.livekit.io
+۲. ثبت‌نام کن با Google یا GitHub (رایگان، بدون کردیت کارت)
+۳. بعد از ورود، روی Create Project بزن
+۴. اسم پروژه: watchparty
+۵. منطقه: نزدیک‌ترین (مثلاً Frankfurt)
+۶. Create رو بزن
+```
+
+#### قدم دوم: گرفتن API Keys
+
+```bash
+۱. از منوی چپ برو به Settings → API Keys
+۲. سه مقدار رو کپی کن:
+
+   LIVEKIT_API_KEY     (مثل: sk_abc123...)
+   LIVEKIT_API_SECRET   (مثل: xyz456...)
+   LIVEKIT_URL          (مثل: wss://xxx.livekit.cloud)
+```
+
+#### قدم سوم: تنظیم متغیرها در Railway
+
+به پروژه اصلی Watch Party در Railway برو و در بخش Variables موارد زیر را اضافه کن:
+
+```env
+LIVEKIT_API_KEY=sk_abc123...      # از LiveKit Cloud
+LIVEKIT_API_SECRET=xyz456...       # از LiveKit Cloud
+LIVEKIT_URL=wss://xxx.livekit.cloud  # از LiveKit Cloud
+```
+
+> **نکته:** فقط همین ۳ متغیر کافی است. نیازی به اکانت دوم Railway نیست.
+
+### 7. فایل Railway کانفیگ
 
 پروژه فایل `railway.json` دارد که کارهای زیر را انجام می‌دهد:
 
@@ -90,7 +128,7 @@ Railway این مقدار را از سرویس PostgreSQL همان پروژه م
 3. اجرای migrationهای Prisma
 4. اجرای اپ با `npm run start`
 
-### 6. اجرای Deploy
+### 8. اجرای Deploy
 
 داخل سرویس اصلی اپ روی Railway روی **Deploy** یا **Redeploy** کلیک کن.
 
@@ -118,3 +156,6 @@ Railway این مقدار را از سرویس PostgreSQL همان پروژه م
 |-------|-------|---------|
 | `DATABASE_URL` | آدرس اتصال PostgreSQL | `postgresql://user:pass@host:5432/db` |
 | `PORT` | پورت سرور | `3000` |
+| `LIVEKIT_API_KEY` | کلید API برای ویس چت | — |
+| `LIVEKIT_API_SECRET` | رمز API برای ویس چت | — |
+| `LIVEKIT_URL` | آدرس سرور LiveKit (ویس چت) | `wss://...` |

@@ -39,7 +39,7 @@ export default function Home() {
             className="text-[var(--text-secondary)] text-base sm:text-lg max-w-xl mx-auto leading-relaxed px-2"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            اتاق بساز، لینک ویدیو بذار، دوستان رو دعوت کن. همه با هم و هماهنگ تماشا می‌کنن، بدون هیچ هزینه‌ای.
+            اتاق بساز، لینک ویدیو بذار، دوستات رو دعوت کن. همه با هم یوتیوب و فیلم و سریال تماشا کنین
           </p>
         </div>
 
