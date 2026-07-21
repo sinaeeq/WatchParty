@@ -11,7 +11,6 @@
 <br>
 
 <p align="center">
-  <a href="./SETUP.md">📦 Deployment Guide</a>
   &nbsp;|&nbsp;
   <a href="./README-FA.md">🇮🇷 فارسی</a>
 </p>
