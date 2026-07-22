@@ -45,7 +45,7 @@ Works on desktop and mobile. Fullscreen mode with orientation lock on mobile dev
 5. **Share the room link** with friends
 6. **Enjoy watching together!**
 
-> ⚠️ **Note for YouTube:** Due to regional restrictions, you may need a VPN to use the YouTube feature.
+> ⚠️ **Note for YouTube:** This feature is not accessible from Iran without a VPN.
 
 ## 🏗️ Tech Stack
 
