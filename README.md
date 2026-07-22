@@ -5,7 +5,7 @@
   <a href="https://bahampk.ir"><strong>bahampk.ir</strong></a>
 </p>
 <p align="center">
-  <a href="./README-FA.md">🇮🇷 فارسی</a>
+  <a href="./README-FA.md">فارسی</a>
 </p>
 
 ## ✨ Features
