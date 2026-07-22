@@ -2,7 +2,7 @@
 
 **Watch Party** is a free, real-time synchronized video-watching platform with voice chat. Create a room, add a video link, share the link with friends, and watch together — everyone's playback stays perfectly in sync.
 <p align="center">
-  <a href="https://watchparty.dpdns.org"><strong>watchparty.dpdns.org</strong></a>
+  <a href="https://bahampk.ir"><strong>bahampk.ir</strong></a>
 </p>
 <p align="center">
   <a href="./README-FA.md">🇮🇷 فارسی</a>
@@ -45,7 +45,7 @@ Works on desktop and mobile. Fullscreen mode with orientation lock on mobile dev
 5. **Share the room link** with friends
 6. **Enjoy watching together!**
 
-> ⚠️ **Note for YouTube:** Due to regional restrictions, you may need a VPN to use the YouTube feature.
+> ⚠️ **Note for YouTube:** This feature is not accessible from Iran without a VPN.
 
 ## 🏗️ Tech Stack
 
