@@ -3,16 +3,23 @@ import CreateRoom from '@/components/CreateRoom'
 export default function Home() {
   return (
     <main className="min-h-screen relative overflow-hidden">
-      {/* Background layers */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0B0D11] via-[#0D1117] to-[#111827]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(0,212,170,0.08),transparent)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_80%,rgba(255,107,107,0.04),transparent)]" />
+      {/* Aurora Background */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Base dark gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0B0D11] via-[#0D1117] to-[#111827]" />
+        
+        {/* Aurora Blobs */}
+        <div className="absolute -top-[300px] -left-[200px] w-[600px] h-[600px] bg-[var(--accent)]/20 rounded-full blur-[120px] animate-aurora-1" />
+        <div className="absolute -bottom-[200px] -right-[300px] w-[500px] h-[500px] bg-[var(--accent-warm)]/15 rounded-full blur-[100px] animate-aurora-2" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#00B4D8]/15 rounded-full blur-[80px] animate-aurora-3" />
+      </div>
 
       {/* Header with logo */}
       <header className="relative z-20 max-w-6xl mx-auto px-4 py-4 sm:py-5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[#00B4D8] shadow-[var(--shadow-glow)]">
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center glass-card">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)] to-[#00B4D8] rounded-lg opacity-60" />
+            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           </div>
@@ -26,8 +33,11 @@ export default function Home() {
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-10 sm:py-16">
         {/* Hero - clean, headline-first */}
         <div className="text-center mb-10 sm:mb-16 animate-fade-in-up">
+          <div className="inline-block px-3 py-1 rounded-full glass-card text-[11px] sm:text-xs font-medium text-[var(--accent)] mb-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            ✨ رایگان
+          </div>
           <h2
-            className="text-3xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] mb-4 sm:mb-5 leading-tight"
+            className="text-4xl sm:text-5xl md:text-7xl font-black text-[var(--text-primary)] mb-4 sm:mb-5 leading-tight"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             با دوستات همزمان{' '}
@@ -79,7 +89,7 @@ export default function Home() {
           ].map((feature, i) => (
             <div
               key={i}
-              className="group relative bg-[var(--bg-card)] rounded-xl p-4 sm:p-6 border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-all duration-300 hover:shadow-[var(--shadow-card)]"
+              className="group relative glass-card rounded-xl p-4 sm:p-6 border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-all duration-300 hover:shadow-[var(--shadow-card)]"
               style={{ animationDelay: `${i * 100}ms` }}
             >
               <div
@@ -105,24 +115,24 @@ export default function Home() {
         <div className="max-w-lg mx-auto animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <CreateRoom />
         </div>
-
-        {/* Footer */}
-        <footer className="mt-16 sm:mt-20 text-center border-t border-[var(--border-subtle)] pt-6 sm:pt-8 pb-6 sm:pb-4">
-          <div className="flex flex-col items-center gap-1.5">
-            <p className="text-[var(--text-muted)] text-xs sm:text-sm" style={{ fontFamily: 'var(--font-body)' }}>
-              ساخته شده با عشق توسط
-            </p>
-            <div className="flex items-center justify-center gap-3 text-xs sm:text-sm" style={{ fontFamily: 'var(--font-body)' }}>
-              <span className="font-semibold text-[var(--text-secondary)]">SPK</span>
-              <span className="text-[var(--text-muted)]">&</span>
-              <span className="font-semibold text-[var(--text-secondary)]">MMDJ</span>
-            </div>
-            <p className="text-[var(--text-muted)] text-[10px] sm:text-xs mt-2 opacity-60" style={{ fontFamily: 'var(--font-body)' }}>
-              تحت مجوز MIT — {new Date().getFullYear()} © baham
-            </p>
-          </div>
-        </footer>
       </div>
+
+      {/* Footer */}
+      <footer className="relative z-10 mt-16 sm:mt-20 text-center border-t border-[var(--border-subtle)] pt-6 sm:pt-8 pb-6 sm:pb-4 glass-card rounded-t-2xl -mx-4 mb-[-20px]">
+        <div className="flex flex-col items-center gap-1.5">
+          <p className="text-[var(--text-muted)] text-xs sm:text-sm" style={{ fontFamily: 'var(--font-body)' }}>
+            ساخته شده با عشق توسط
+          </p>
+          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm" style={{ fontFamily: 'var(--font-body)' }}>
+            <span className="font-semibold text-[var(--text-secondary)]">باهم</span>
+            <span className="text-[var(--text-muted)]">&</span>
+            <span className="font-semibold text-[var(--text-secondary)]">baham</span>
+          </div>
+          <p className="text-[var(--text-muted)] text-[10px] sm:text-xs mt-2 opacity-60" style={{ fontFamily: 'var(--font-body)' }}>
+            تحت مجوز MIT — {new Date().getFullYear()} © baham
+          </p>
+        </div>
+      </footer>
     </main>
   )
 }
