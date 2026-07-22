@@ -1,6 +1,6 @@
-# Watch Party 🎬
+# باهم 🎬
 
-**Watch Party** is a free, real-time synchronized video-watching platform with voice chat. Create a room, add a video link, share the link with friends, and watch together — everyone's playback stays perfectly in sync.
+**باهم** یک پلتفرم رایگان برای تماشای هم‌زمان ویدیو با دوستان است. با قابلیت **ویس چت**، می‌توانید هم‌زمان با دوستانتان فیلم ببینید و با هم حرف بزنید. اتاق بسازید، لینک ویدیو بگذارید، لینک اتاق را با دوستانتان به اشتراک بگذارید و همه با هم و هماهنگ تماشا کنید.
 <p align="center">
   <a href="https://bahampk.ir"><strong>bahampk.ir</strong></a>
 </p>

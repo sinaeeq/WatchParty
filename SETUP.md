@@ -1,4 +1,4 @@
-# Watch Party — Deployment Guide
+# باهم — Deployment Guide
 
 This guide covers local development setup and deploying on Railway.
 

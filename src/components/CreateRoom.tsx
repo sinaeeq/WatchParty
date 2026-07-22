@@ -75,9 +75,9 @@ export default function CreateRoom() {
   }
 
   return (
-    <div className="bg-[var(--bg-card)] rounded-xl p-5 sm:p-6 shadow-[var(--shadow-elevated)] border border-[var(--border-subtle)]">
+    <div className="glass-card p-5 sm:p-6 rounded-2xl">
       <h2
-        className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-5 sm:mb-6 flex items-center gap-2.5 sm:gap-3"
+        className="text-lg sm:text-xl font-bold mb-5 sm:mb-6 flex items-center gap-2.5 sm:gap-3"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[#00B4D8]">
@@ -88,7 +88,7 @@ export default function CreateRoom() {
         ساخت اتاق جدید
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
         {/* Video Type Toggle */}
         <div>
           <label className="block text-xs sm:text-sm font-medium text-[var(--text-secondary)] mb-1.5" style={{ fontFamily: 'var(--font-body)' }}>
@@ -132,7 +132,7 @@ export default function CreateRoom() {
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3">
             <p className="text-[11px] sm:text-xs text-amber-400/90 flex items-center gap-2" style={{ fontFamily: 'var(--font-body)' }}>
               <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126c-.866 1.5-1.976 3.374-.26 4.218l3.297 3.297zM12 15.75h.007v.008H12v-.008z" />
               </svg>
               این بخش با ایپی ایران در دسترس نیست
             </p>
@@ -149,7 +149,7 @@ export default function CreateRoom() {
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
             placeholder="مثال: تماشای فیلم با دوستان"
-            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] transition text-[16px] sm:text-sm"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[var(--bg-surface)]/80 border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] transition text-[16px] sm:text-sm"
             style={{ fontFamily: 'var(--font-body)' }}
           />
         </div>
@@ -164,7 +164,7 @@ export default function CreateRoom() {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder={videoType === 'youtube' ? 'https://www.youtube.com/watch?v=...' : 'https://example.com/video.mp4'}
-            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] transition text-[16px] sm:text-sm"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[var(--bg-surface)]/80 border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] transition text-[16px] sm:text-sm"
             style={{ fontFamily: 'var(--font-body)' }}
           />
           {videoType === 'direct' && (
