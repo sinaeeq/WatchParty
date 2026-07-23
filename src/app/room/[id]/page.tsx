@@ -26,6 +26,7 @@ export default function RoomPage() {
   const [mobileTab, setMobileTab] = useState<'video' | 'chat'>('video')
   const [chatReadCount, setChatReadCount] = useState(0)
   const socketRef = useRef<Socket | null>(null)
+  const lastAppliedTimestamp = useRef(0)
   // Only create voice when username is available (after UserSetup)
   const voice = useVoice(roomId, username ?? '')
 
@@ -54,7 +55,15 @@ export default function RoomPage() {
 
     socket.on('connect', () => socket.emit('join-room', { roomId, username }))
     socket.on('chat-message', (m: Message) => setMessages(p => [...p, m]))
-    socket.on('video-sync', (s: VideoSyncState) => setSyncState(s))
+    socket.on('video-sync', (s: VideoSyncState) => {
+      if (s.timestamp && s.timestamp > lastAppliedTimestamp.current) {
+        lastAppliedTimestamp.current = s.timestamp
+        setSyncState(s)
+      } else if (!s.timestamp) {
+        // Fallback for old messages without timestamp
+        setSyncState(s)
+      }
+    })
     socket.on('room-users', (d: { users: string[] }) => {
       setOnlineUsers(d.users)
     })
