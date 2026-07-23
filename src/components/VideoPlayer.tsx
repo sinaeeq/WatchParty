@@ -17,6 +17,122 @@ interface SubtitleTrack { label: string; language: string; cues: SubtitleCue[] }
 interface AudioTrack { label: string; language: string; index: number }
 type SettingsPanel = 'none' | 'main' | 'subtitles' | 'audio' | 'subtitle-style'
 
+// ── YouTube IFrame Player ──
+declare global {
+  interface Window {
+    YT?: any
+    onYouTubeIframeAPIReady?: () => void
+  }
+}
+
+function YouTubePlayer({ videoUrl, onSync, externalState }: {
+  videoUrl: string
+  onSync: (state: { isPlaying: boolean; currentTime: number }) => void
+  externalState?: { isPlaying: boolean; currentTime: number } | null
+}) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const playerRef = useRef<any>(null)
+  const apiReadyRef = useRef(false)
+  const localAction = useRef(false)
+  const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pollTimer = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  // Load YouTube IFrame API
+  useEffect(() => {
+    if (document.getElementById('yt-api-script')) {
+      if (window.YT?.Player) apiReadyRef.current = true
+      return
+    }
+    const tag = document.createElement('script')
+    tag.id = 'yt-api-script'
+    tag.src = 'https://www.youtube.com/iframe_api'
+    const first = document.getElementsByTagName('script')[0]
+    first?.parentNode?.insertBefore(tag, first)
+  }, [])
+
+  // Create player when API is ready
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const createPlayer = () => {
+      if (!window.YT?.Player) return
+      playerRef.current = new window.YT.Player(containerRef.current, {
+        height: '100%',
+        width: '100%',
+        videoId: videoUrl,
+        playerVars: {
+          rel: 0,
+          autoplay: 1,
+          enablejsapi: 1,
+          controls: 1,
+          modestbranding: 1,
+        },
+        events: {
+          onReady: () => {
+            apiReadyRef.current = true
+            // Start polling for state changes
+            if (pollTimer.current) clearInterval(pollTimer.current)
+            pollTimer.current = setInterval(() => {
+              if (!playerRef.current?.getPlayerState) return
+              const state = playerRef.current.getPlayerState()
+              const time = playerRef.current.getCurrentTime()
+              if (state === 1) {
+                localAction.current = true
+                onSync({ isPlaying: true, currentTime: time })
+                setTimeout(() => { localAction.current = false }, 100)
+              } else if (state === 2) {
+                localAction.current = true
+                onSync({ isPlaying: false, currentTime: time })
+                setTimeout(() => { localAction.current = false }, 100)
+              }
+            }, 500)
+          },
+          onStateChange: (e: { data: number }) => {
+            if (e.data === 1) {
+              localAction.current = true
+              onSync({ isPlaying: true, currentTime: playerRef.current.getCurrentTime() })
+              setTimeout(() => { localAction.current = false }, 100)
+            } else if (e.data === 2) {
+              localAction.current = true
+              onSync({ isPlaying: false, currentTime: playerRef.current.getCurrentTime() })
+              setTimeout(() => { localAction.current = false }, 100)
+            }
+          },
+        },
+      })
+    }
+
+    if (window.YT?.Player) {
+      createPlayer()
+    } else {
+      window.onYouTubeIframeAPIReady = createPlayer
+    }
+
+    return () => {
+      if (pollTimer.current) clearInterval(pollTimer.current)
+    }
+  }, [videoUrl, onSync])
+
+  // External sync
+  useEffect(() => {
+    if (!externalState || localAction.current || !playerRef.current?.seekTo) return
+    const player = playerRef.current
+    const currentTime = player.getCurrentTime()
+    if (Math.abs(currentTime - externalState.currentTime) > 1) {
+      player.seekTo(externalState.currentTime, true)
+    }
+    if (externalState.isPlaying && player.getPlayerState() !== 1) {
+      player.playVideo()
+    } else if (!externalState.isPlaying && player.getPlayerState() === 1) {
+      player.pauseVideo()
+    }
+  }, [externalState])
+
+  return (
+    <div ref={containerRef} className="w-full h-full bg-black rounded-xl overflow-hidden" />
+  )
+}
+
 export default function VideoPlayer({ videoUrl, videoType, onSync, externalState }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const playerRef = useRef<HTMLIFrameElement>(null)
@@ -310,9 +426,7 @@ export default function VideoPlayer({ videoUrl, videoType, onSync, externalState
 
   if (videoType === 'youtube') {
     return (
-      <div ref={containerRef} className="video-player-container relative w-full h-full bg-black max-sm:rounded-none sm:rounded-xl lg:rounded-2xl overflow-hidden max-sm:ring-0 sm:ring-1 sm:ring-white/5">
-        <iframe ref={playerRef} src={`https://www.youtube.com/embed/${videoUrl}?enablejsapi=1&rel=0`} className="absolute inset-0 w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-      </div>
+      <YouTubePlayer videoUrl={videoUrl} onSync={onSync} externalState={externalState} />
     )
   }
 
