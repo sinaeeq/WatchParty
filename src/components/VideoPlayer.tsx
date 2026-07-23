@@ -34,48 +34,55 @@ function YouTubePlayer({ videoUrl, onSync, externalState }: {
   const playerRef = useRef<any>(null)
   const apiReadyRef = useRef(false)
   const localAction = useRef(false)
-  const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pollTimer = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Load YouTube IFrame API
-  useEffect(() => {
-    if (document.getElementById('yt-api-script')) {
-      if (window.YT?.Player) apiReadyRef.current = true
-      return
+  // Clean YouTube ID from URL
+  const youtubeId = useCallback(() => {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=)([^&\s]+)/,
+      /(?:youtu\.be\/)([^?\s]+)/,
+      /(?:youtube\.com\/embed\/)([^?\s]+)/,
+    ]
+    for (const pattern of patterns) {
+      const match = videoUrl.match(pattern)
+      if (match) return match[1]
     }
-    const tag = document.createElement('script')
-    tag.id = 'yt-api-script'
-    tag.src = 'https://www.youtube.com/iframe_api'
-    const first = document.getElementsByTagName('script')[0]
-    first?.parentNode?.insertBefore(tag, first)
-  }, [])
+    // If it's already just an ID
+    return videoUrl
+  }, [videoUrl])
 
-  // Create player when API is ready
+  // Load YouTube IFrame API + create player
   useEffect(() => {
-    if (!containerRef.current) return
+    let cancelled = false
 
-    const createPlayer = () => {
-      if (!window.YT?.Player) return
+    const initYT = () => {
+      if (cancelled || !window.YT?.Player || !containerRef.current) return
+
+      if (playerRef.current) return // already created
+
+      const id = youtubeId()
+      console.log('[YouTube] Creating player with ID:', id, 'URL:', videoUrl)
+
       playerRef.current = new window.YT.Player(containerRef.current, {
         height: '100%',
         width: '100%',
-        videoId: videoUrl,
+        videoId: id,
         playerVars: {
           rel: 0,
-          autoplay: 1,
+          autoplay: 0,
           enablejsapi: 1,
           controls: 1,
           modestbranding: 1,
+          playsinline: 1,
         },
         events: {
           onReady: () => {
+            console.log('[YouTube] Player ready')
             apiReadyRef.current = true
-            // Start polling for state changes
-            if (pollTimer.current) clearInterval(pollTimer.current)
             pollTimer.current = setInterval(() => {
               if (!playerRef.current?.getPlayerState) return
               const state = playerRef.current.getPlayerState()
-              const time = playerRef.current.getCurrentTime()
+              const time = playerRef.current.getCurrentTime?.() || 0
               if (state === 1) {
                 localAction.current = true
                 onSync({ isPlaying: true, currentTime: time })
@@ -88,13 +95,14 @@ function YouTubePlayer({ videoUrl, onSync, externalState }: {
             }, 500)
           },
           onStateChange: (e: { data: number }) => {
+            const time = playerRef.current?.getCurrentTime?.() || 0
             if (e.data === 1) {
               localAction.current = true
-              onSync({ isPlaying: true, currentTime: playerRef.current.getCurrentTime() })
+              onSync({ isPlaying: true, currentTime: time })
               setTimeout(() => { localAction.current = false }, 100)
             } else if (e.data === 2) {
               localAction.current = true
-              onSync({ isPlaying: false, currentTime: playerRef.current.getCurrentTime() })
+              onSync({ isPlaying: false, currentTime: time })
               setTimeout(() => { localAction.current = false }, 100)
             }
           },
@@ -103,15 +111,27 @@ function YouTubePlayer({ videoUrl, onSync, externalState }: {
     }
 
     if (window.YT?.Player) {
-      createPlayer()
+      initYT()
     } else {
-      window.onYouTubeIframeAPIReady = createPlayer
+      // API not loaded yet, load it
+      const existing = document.getElementById('yt-api-script')
+      if (existing) {
+        // Script exists but API not ready, wait
+        window.onYouTubeIframeAPIReady = initYT
+      } else {
+        const tag = document.createElement('script')
+        tag.id = 'yt-api-script'
+        tag.src = 'https://www.youtube.com/iframe_api'
+        tag.onload = () => { window.onYouTubeIframeAPIReady = initYT }
+        document.head.appendChild(tag)
+      }
     }
 
     return () => {
+      cancelled = true
       if (pollTimer.current) clearInterval(pollTimer.current)
     }
-  }, [videoUrl, onSync])
+  }, [videoUrl, onSync, youtubeId])
 
   // External sync
   useEffect(() => {
@@ -129,7 +149,9 @@ function YouTubePlayer({ videoUrl, onSync, externalState }: {
   }, [externalState])
 
   return (
-    <div ref={containerRef} className="w-full h-full bg-black rounded-xl overflow-hidden" />
+    <div className="relative w-full h-full">
+      <div ref={containerRef} className="absolute inset-0 bg-black rounded-xl overflow-hidden" />
+    </div>
   )
 }
 
