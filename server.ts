@@ -40,6 +40,7 @@ app.prepare().then(() => {
   const socketUserMap = new Map<string, { username: string; roomId: string }>()
   const emptyRoomTimers = new Map<string, ReturnType<typeof setTimeout>>()
   const pendingDisconnects = new Map<string, ReturnType<typeof setTimeout>>() // key: "roomId:username"
+  const syncStates = new Map<string, { isPlaying: boolean; currentTime: number; timestamp: number }>()
   const ROOM_EMPTY_TIMEOUT = 120_000 // 120 seconds before deleting empty room
   const DISCONNECT_GRACE = 15_000 // 15 seconds grace period for reconnection
 
@@ -168,6 +169,7 @@ app.prepare().then(() => {
     })
 
     socket.on('video-sync', ({ roomId, isPlaying, currentTime, timestamp }) => {
+      syncStates.set(roomId, { isPlaying, currentTime, timestamp })
       socket.to(roomId).emit('video-sync', { isPlaying, currentTime, timestamp })
     })
 
