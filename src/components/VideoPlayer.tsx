@@ -138,23 +138,24 @@ function YouTubePlayer({ videoUrl, onSync, externalState }: {
     }
   }, [videoUrl, onSync, youtubeId, emitSync])
 
-  // External sync — smart reconnect
+  // External sync — always sync play/pause for all users
   useEffect(() => {
     if (!externalState || localAction.current || !playerRef.current?.seekTo) return
     const player = playerRef.current
     const currentTime = player.getCurrentTime()
     const timeDiff = Math.abs(currentTime - externalState.currentTime)
 
-    if (timeDiff > 10) {
-      console.log('[YouTube] Long drift, silent seek')
+    // Seek if drift > 1s
+    if (timeDiff > 1) {
       player.seekTo(externalState.currentTime, true)
-    } else if (timeDiff > 1) {
-      player.seekTo(externalState.currentTime, true)
-      if (externalState.isPlaying && player.getPlayerState() !== 1) {
-        player.playVideo()
-      } else if (!externalState.isPlaying && player.getPlayerState() === 1) {
-        player.pauseVideo()
-      }
+    }
+
+    // Always sync play/pause
+    const playerState = player.getPlayerState()
+    if (externalState.isPlaying && playerState !== 1) {
+      player.playVideo()
+    } else if (!externalState.isPlaying && playerState === 1) {
+      player.pauseVideo()
     }
   }, [externalState])
 
